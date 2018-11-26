@@ -42,6 +42,54 @@ const sounds = [
         keycode : 81,
         soundname: 'african',
         soundurl: 'https://sampleswap.org/samples-ghost/DRUMS%20and%20SINGLE%20HITS/percussion%20african%20and%20eastern/90[kb]african-pe-lo.wav.mp3'
+    },
+    {
+        keytriggered : "W",
+        keycode : 87,
+        soundname: 'bongo',
+        soundurl: 'https://sampleswap.org/samples-ghost/DRUMS%20and%20SINGLE%20HITS/percussion%20african%20and%20eastern/23[kb]bongo%20lo.aif.mp3'
+    },
+    {
+        keytriggered : "E",
+        keycode : 69,
+        soundname: 'crikix',
+        soundurl: 'https://sampleswap.org/samples-ghost/DRUMS%20and%20SINGLE%20HITS/percussion%20african%20and%20eastern/65[kb]crikix.aif.mp3'
+    },
+    {
+        keytriggered : "A",
+        keycode : 65,
+        soundname: 'electro',
+        soundurl: 'https://sampleswap.org/samples-ghost/DRUMS%20and%20SINGLE%20HITS/percussion%20african%20and%20eastern/309[kb]electrotabla.aif.mp3'
+    },
+    {
+        keytriggered : "S",
+        keycode : 83,
+        soundname: 'ethno',
+        soundurl: 'https://sampleswap.org/samples-ghost/DRUMS%20and%20SINGLE%20HITS/percussion%20african%20and%20eastern/67[kb]ethnowhat.aif.mp3'
+    },
+    {
+        keytriggered : "D",
+        keycode : 68,
+        soundname: 'gungru',
+        soundurl: 'https://sampleswap.org/samples-ghost/DRUMS%20and%20SINGLE%20HITS/percussion%20african%20and%20eastern/107[kb]gungru5.aif.mp3'
+    },
+    {
+        keytriggered : "Z",
+        keycode : 90,
+        soundname: 'lotabla',
+        soundurl: 'https://sampleswap.org/samples-ghost/DRUMS%20and%20SINGLE%20HITS/percussion%20african%20and%20eastern/197[kb]lotabla.aif.mp3'
+    },
+    {
+        keytriggered : "X",
+        keycode : 88,
+        soundname: 'rain',
+        soundurl: 'https://sampleswap.org/samples-ghost/DRUMS%20and%20SINGLE%20HITS/percussion%20african%20and%20eastern/356[kb]rainstick.aif.mp3'
+    },
+    {
+        keytriggered : "C",
+        keycode : 67,
+        soundname: 'steel',
+        soundurl: 'https://sampleswap.org/samples-ghost/DRUMS%20and%20SINGLE%20HITS/percussion%20african%20and%20eastern/79[kb]steeldrum.aif.mp3'
         }
 ]
 
@@ -69,10 +117,15 @@ class DrumMachine extends React.Component {
 
     }
     render() {
+        const drums = sounds.map((curr, i, arr) =>
+            <Drumpad key={curr.toString()+i}
+                     keytrigg={sounds[i].keytriggered} />
+        );
         return(<div id="drum-machine">
+            <div className="title">DRUM MACHINE</div>
             <Display clipstring={this.state.currentClip} />
             <div className="drum-container">
-                <Drumpad keytrigg={sounds[0].keytriggered} />
+                {drums}
                 </div>
         </div>)
     }
