@@ -93,15 +93,48 @@ const sounds = [
         }
 ]
 
+const activePad = {
+    borderColor: 'rgba(52, 123, 152, 1)',
+    backgroundColor: 'rgba(228, 241, 246, 1)',
+    color:' rgba(52, 123, 152, 1)'
+}
+
+const inactivePad = {
+    borderColor: 'rgba(228, 241, 246, 0.5)',
+    backgroundColor: 'rgba(52, 123, 152, 0.4)',
+    color: 'rgb(228, 241, 246)'
+}
+
+
 class Display extends React.Component {
     render() {
         return (<div id="display">{this.props.clipstring}</div>)
     }
 }
 class Drumpad extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            style: inactivePad
+        }
+        this.activePadhandle = this.activePadhandle.bind(this);
+    }
+    activePadhandle() {
+        this.setState({
+            style: activePad
+        })
+    }
     render() {
-        return (<div data-key={this.props.soundname} id={this.props.keytrigg} className="drum-pad">{this.props.keytrigg}
-                <audio data-key={this.props.keycode} src={this.props.soundurl}></audio>
+        return (<div data-key={this.props.soundname}
+                     id={this.props.soundname}
+                     className="drum-pad"
+                     onClick={this.activePadhandle}
+                     style={this.state.style}>
+                     {this.props.keytriggered}
+                <audio data-key={this.props.keycode}
+                       id={this.props.keytriggered}
+                       src={this.props.soundurl}>
+                </audio>
                 </div>)
 
     }
@@ -116,10 +149,17 @@ class DrumMachine extends React.Component {
         }
 
     }
+    componentDidMount(){
+        window.addEventListener('keydown', function(e){
+            const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`)
+            console.log(audio)
+        });
+    }
     render() {
         const drums = sounds.map((curr, i, arr) =>
             <Drumpad key={curr.toString()+i}
-                     keytrigg={sounds[i].keytriggered} />
+                     keytriggered={sounds[i].keytriggered}
+                     keycode={sounds[i].keycode}/>
         );
         return(<div id="drum-machine">
             <div className="title">DRUM MACHINE</div>
