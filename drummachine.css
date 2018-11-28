@@ -98,5 +98,12 @@ body {
     font-size: 20px;
     font-family: sans-serif;
     font-weight: bold;
+    transition: all 0.1s;
 
+}
+.activePad{
+transform: scale(0.9);
+border-color: rgba(52, 123, 152, 1);
+background-color: rgba(228, 241, 246, 1);
+color: rgba(52, 123, 152, 1);
 }
