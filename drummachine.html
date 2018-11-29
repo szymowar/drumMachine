@@ -12,30 +12,7 @@
     <div id="root">
         </div>
         <script type="text/babel">
-/*User Story #1: I should be able to see an outer container with a corresponding id="drum-machine" that contains all other elements.
 
-User Story #2: Within #drum-machine I can see an element with a corresponding id="display".
-
-User Story #3: Within #drum-machine I can see 9 clickable drum pad elements, each with a
-class name of drum-pad, a unique id that describes the audio clip the drum pad will be set up to trigger,
-and an inner text that corresponds to one of the following keys on the
-keyboard: Q, W, E, A, S, D, Z, X, C. The drum pads MUST be in this order.
-
-User Story #4: Within each .drum-pad, there should be an HTML5 audio element which
- has a src attribute pointing to an audio clip, a class name of clip, and an id corresponding
-  to the inner text of its parent .drum-pad (e.g. id="Q", id="W", id="E" etc.).
-
-User Story #5: When I click on a .drum-pad element, the audio clip contained in
- its child audio element should be triggered.
-
-User Story #6: When I press the trigger key associated with each .drum-pad,
-the audio clip contained in its child audio element should be triggered (e.g.
-pressing the Q key should trigger the drum pad which contains the string "Q",
- pressing the W key should trigger the drum pad which contains the string "W", etc.).
-
-User Story #7: When a .drum-pad is triggered, a string describing the associated
- audio clip is displayed as the inner text of the #display element (each string must be unique).
-*/
 const sounds = [
     {
         keytriggered : "Q",
@@ -107,21 +84,28 @@ class Drumpad extends React.Component {
         };
         this.activePadhandle = this.activePadhandle.bind(this);
         this.playsound = this.playsound.bind(this);
+        this.handleKeyPress = this.handleKeyPress.bind(this);
     }
 
     componentDidMount(){
-        window.addEventListener('keydown', this.playsound);
+        window.addEventListener('keydown', this.handleKeyPress);
+    }
+    componentWillUnmount(){
+        window.removeEventListener('keydown', this.handleKeyPress);
     }
 
-    playsound(e){
-        console.log(this);
-        const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
-        const key = document.querySelector(`div[data-key="${e.keyCode}"]`);
-        if(!audio) return;
+    handleKeyPress(e){
+        if(e.keyCode === this.props.keycode){
+            this.playsound();
+        }
+        return;
+    }
+    playsound(){
+        const audio = document.getElementById(this.props.keytriggered);
         audio.currentTime = 0;
         audio.play();
         this.activePadhandle();
-        console.log(audio)
+        this.props.sendData(this.props.soundname);
     }
 
     activePadhandle() {
@@ -135,10 +119,11 @@ class Drumpad extends React.Component {
         return (<div data-key={this.props.keycode}
                      id={this.props.soundname}
                      className={this.state.baseClass}
-                     onClick={() => console.log(this.id)}>
+                     onClick={this.playsound}>
                      {this.props.keytriggered}
                 <audio data-key={this.props.keycode}
                        id={this.props.keytriggered}
+                       className='clip'
                        src={this.props.soundurl}>
                 </audio>
                 </div>)
@@ -151,17 +136,31 @@ class DrumMachine extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            currentClip: sounds[0].soundname
+            currentClip: 'african'
         }
-
+        this.displaySound = this.displaySound.bind(this);
+        this.getData = this.getData.bind(this);
     }
 
+    componentDidMount(){
+        document.addEventListener('play', this.displaySound);
+    }
+
+    displaySound(e){
+        this.setState({currentClip : console.log(e)})
+    }
+
+    getData(val){
+        this.setState({currentClip: val});
+    }
     render() {
         const drums = sounds.map((curr, i, arr) =>
             <Drumpad key={curr.toString()+i}
                      keytriggered={sounds[i].keytriggered}
                      keycode={sounds[i].keycode}
                      soundurl={sounds[i].soundurl}
+                     soundname={sounds[i].soundname}
+                     sendData={this.getData}
                     />
         );
 
